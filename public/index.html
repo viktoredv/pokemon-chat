@@ -31,157 +31,114 @@
     }
 
     .pokeball {
-      width: 32px;
-      height: 32px;
+      width: 32px; height: 32px;
       border-radius: 50%;
       background: linear-gradient(to bottom, #fff 50%, #CC0000 50%);
       border: 3px solid #222;
-      position: relative;
-      flex-shrink: 0;
+      position: relative; flex-shrink: 0;
     }
     .pokeball::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      content: ''; position: absolute;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 10px;
-      height: 10px;
-      background: #fff;
-      border-radius: 50%;
-      border: 3px solid #222;
-      z-index: 1;
+      width: 10px; height: 10px;
+      background: #fff; border-radius: 50%;
+      border: 3px solid #222; z-index: 1;
     }
     .pokeball::after {
-      content: '';
-      position: absolute;
-      top: calc(50% - 1.5px);
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: #222;
+      content: ''; position: absolute;
+      top: calc(50% - 1.5px); left: 0; right: 0;
+      height: 3px; background: #222;
     }
 
-    header h1 {
-      color: #fff;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-    header p {
-      color: rgba(255,255,255,0.75);
-      font-size: 13px;
-      margin-top: 1px;
-    }
+    header h1 { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    header p  { color: rgba(255,255,255,0.75); font-size: 13px; margin-top: 1px; }
 
     .chat-container {
-      width: 100%;
-      max-width: 720px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 24px 16px 0;
-      gap: 16px;
-      overflow-y: auto;
-      padding-bottom: 140px;
+      width: 100%; max-width: 720px;
+      flex: 1; display: flex; flex-direction: column;
+      padding: 24px 16px 0; gap: 16px;
+      overflow-y: auto; padding-bottom: 150px;
     }
 
     .message {
-      display: flex;
-      gap: 10px;
-      max-width: 85%;
+      display: flex; gap: 10px; max-width: 85%;
       animation: fadeIn 0.2s ease;
     }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; } }
 
     .message.user { align-self: flex-end; flex-direction: row-reverse; }
     .message.assistant { align-self: flex-start; }
 
     .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
+      width: 32px; height: 32px; border-radius: 50%;
+      flex-shrink: 0; display: flex;
+      align-items: center; justify-content: center; font-size: 16px;
     }
     .message.assistant .avatar { background: #3B4CCA; }
-    .message.user .avatar { background: #CC0000; }
+    .message.user .avatar      { background: #CC0000; }
 
     .bubble {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.6;
+      padding: 10px 14px; border-radius: 16px;
+      font-size: 15px; line-height: 1.6;
     }
-    .bubble p { margin-bottom: 8px; }
+    .bubble p            { margin-bottom: 8px; }
     .bubble p:last-child { margin-bottom: 0; }
-    .bubble strong { font-weight: 600; }
+    .bubble strong       { font-weight: 600; }
     .bubble ol, .bubble ul { padding-left: 18px; margin-bottom: 8px; }
-    .bubble li { margin-bottom: 4px; }
-    .bubble code { background: rgba(0,0,0,0.07); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
+    .bubble li           { margin-bottom: 4px; }
+
     .message.assistant .bubble {
-      background: #fff;
-      color: #222;
+      background: #fff; color: #222;
       border-top-left-radius: 4px;
       box-shadow: 0 1px 4px rgba(0,0,0,0.08);
     }
     .message.user .bubble {
-      background: #CC0000;
-      color: #fff;
+      background: #CC0000; color: #fff;
       border-top-right-radius: 4px;
     }
 
+    /* Pokémon sprite inside bubble */
+    .sprite-row {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .sprite-row img {
+      width: 80px; height: 80px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+      animation: popIn 0.3s ease;
+    }
+    @keyframes popIn { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
     .typing .bubble::after {
-      content: '●●●';
-      letter-spacing: 2px;
-      animation: blink 1.2s infinite;
-      font-size: 10px;
+      content: '●●●'; letter-spacing: 2px;
+      animation: blink 1.2s infinite; font-size: 10px;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 0.3; }
-      50% { opacity: 1; }
-    }
+    @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
 
     .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding: 0 16px;
-      max-width: 720px;
-      width: 100%;
-      margin-top: -4px;
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 0 16px; max-width: 720px; width: 100%;
+      margin-top: -4px; transition: opacity 0.2s;
     }
     .suggestion {
-      background: #fff;
-      border: 1.5px solid #ddd;
-      border-radius: 20px;
-      padding: 6px 14px;
-      font-size: 13px;
-      color: #444;
-      cursor: pointer;
+      background: #fff; border: 1.5px solid #ddd;
+      border-radius: 20px; padding: 6px 14px;
+      font-size: 13px; color: #444; cursor: pointer;
       transition: all 0.15s;
     }
     .suggestion:hover { border-color: #CC0000; color: #CC0000; background: #fff5f5; }
 
     .input-bar {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      max-width: 720px;
-      left: 50%;
-      transform: translateX(-50%);
+      position: fixed; bottom: 0; width: 100%;
+      max-width: 720px; left: 50%; transform: translateX(-50%);
       padding: 12px 16px 20px;
       background: linear-gradient(to top, #f0f0f0 80%, transparent);
     }
     .input-wrap {
-      display: flex;
-      gap: 8px;
-      background: #fff;
-      border: 1.5px solid #ddd;
-      border-radius: 24px;
+      display: flex; gap: 8px; background: #fff;
+      border: 1.5px solid #ddd; border-radius: 24px;
       padding: 8px 8px 8px 16px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.08);
       transition: border-color 0.15s;
@@ -189,31 +146,19 @@
     .input-wrap:focus-within { border-color: #CC0000; }
 
     textarea {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 14px;
-      font-family: inherit;
-      resize: none;
-      background: transparent;
-      max-height: 120px;
-      line-height: 1.5;
+      flex: 1; border: none; outline: none;
+      font-size: 14px; font-family: inherit;
+      resize: none; background: transparent;
+      max-height: 120px; line-height: 1.5;
     }
 
     button#send {
-      background: #CC0000;
-      border: none;
-      border-radius: 18px;
-      width: 36px;
-      height: 36px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background 0.15s;
+      background: #CC0000; border: none; border-radius: 18px;
+      width: 36px; height: 36px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.15s;
     }
-    button#send:hover { background: #aa0000; }
+    button#send:hover    { background: #aa0000; }
     button#send:disabled { background: #ccc; cursor: default; }
     button#send svg { width: 16px; height: 16px; fill: #fff; }
   </style>
@@ -232,9 +177,9 @@
 
 <div class="suggestions" id="suggestions">
   <button class="suggestion">Who is Charizard?</button>
-  <button class="suggestion">What moves does Pikachu learn?</button>
-  <button class="suggestion">Tell me about the Sinnoh region</button>
-  <button class="suggestion">What type is Gengar?</button>
+  <button class="suggestion">What does Pikachu evolve into?</button>
+  <button class="suggestion">Who's the strongest Pokémon?</button>
+  <button class="suggestion">Which Pokémon can fly?</button>
 </div>
 
 <div class="input-bar">
@@ -247,22 +192,44 @@
 </div>
 
 <script>
-  const chat = document.getElementById('chat');
-  const input = document.getElementById('input');
-  const sendBtn = document.getElementById('send');
-  const suggestions = document.getElementById('suggestions');
+  const chat        = document.getElementById('chat');
+  const input       = document.getElementById('input');
+  const sendBtn     = document.getElementById('send');
+  const suggestionsEl = document.getElementById('suggestions');
 
   const history = [];
 
-  function addMessage(role, text = '') {
-    const wrap = document.createElement('div');
+  // Extract [#ID] sprite markers from text, return {ids, cleanText}
+  function extractSprites(text) {
+    const ids = [...text.matchAll(/\[#(\d+)\]/g)].map(m => m[1]);
+    const cleanText = text.replace(/\[#\d+\]/g, '').trim();
+    return { ids: [...new Set(ids)], cleanText };
+  }
+
+  function renderBubble(bubble, rawText) {
+    const { ids, cleanText } = extractSprites(rawText);
+    let html = '';
+    if (ids.length > 0) {
+      html += '<div class="sprite-row">';
+      ids.slice(0, 3).forEach(id => {
+        html += `<img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png"
+                      alt="Pokémon #${id}" onerror="this.remove()">`;
+      });
+      html += '</div>';
+    }
+    html += marked.parse(cleanText);
+    bubble.innerHTML = html;
+  }
+
+  function addMessage(role, rawText = '') {
+    const wrap   = document.createElement('div');
     wrap.className = `message ${role}`;
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
     avatar.textContent = role === 'assistant' ? '🔴' : '👤';
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
-    bubble.textContent = text;
+    if (rawText) renderBubble(bubble, rawText);
     wrap.appendChild(avatar);
     wrap.appendChild(bubble);
     chat.appendChild(wrap);
@@ -273,7 +240,6 @@
   function addTyping() {
     const wrap = document.createElement('div');
     wrap.className = 'message assistant typing';
-    wrap.id = 'typing';
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
     avatar.textContent = '🔴';
@@ -286,9 +252,33 @@
     return wrap;
   }
 
+  function setSuggestions(chips) {
+    suggestionsEl.innerHTML = '';
+    suggestionsEl.style.display = 'flex';
+    chips.forEach(text => {
+      const btn = document.createElement('button');
+      btn.className = 'suggestion';
+      btn.textContent = text;
+      btn.addEventListener('click', () => send(text));
+      suggestionsEl.appendChild(btn);
+    });
+  }
+
+  async function fetchSuggestions() {
+    try {
+      const res = await fetch('/api/suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: history }),
+      });
+      const { suggestions } = await res.json();
+      if (suggestions?.length) setSuggestions(suggestions);
+    } catch {}
+  }
+
   async function send(text) {
     if (!text.trim()) return;
-    suggestions.style.display = 'none';
+    suggestionsEl.style.display = 'none';
     sendBtn.disabled = true;
     input.value = '';
     input.style.height = 'auto';
@@ -297,8 +287,7 @@
     history.push({ role: 'user', content: text });
 
     let typingEl = addTyping();
-
-    let reply = '';
+    let reply  = '';
     let bubble = null;
 
     try {
@@ -308,7 +297,7 @@
         body: JSON.stringify({ messages: history }),
       });
 
-      const reader = res.body.getReader();
+      const reader  = res.body.getReader();
       const decoder = new TextDecoder();
 
       while (true) {
@@ -319,8 +308,7 @@
 
         for (const char of chunk) {
           if (char === '\x1E') {
-            // New step — start a fresh bubble
-            reply = '';
+            reply  = '';
             bubble = null;
           } else {
             if (!bubble) {
@@ -328,36 +316,33 @@
               bubble = addMessage('assistant');
             }
             reply += char;
-            bubble.innerHTML = marked.parse(reply);
+            renderBubble(bubble, reply);
             chat.scrollTop = chat.scrollHeight;
           }
         }
       }
     } catch (e) {
-      typingEl.remove();
-      addMessage('assistant', 'Something went wrong. Try again!');
+      if (typingEl) typingEl.remove();
+      addMessage('assistant', 'Oops, something went wrong! Try again 🙈');
     }
 
     if (reply) history.push({ role: 'assistant', content: reply });
     sendBtn.disabled = false;
     input.focus();
+
+    // Fetch contextual chips after response
+    fetchSuggestions();
   }
 
   sendBtn.addEventListener('click', () => send(input.value));
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      send(input.value);
-    }
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input.value); }
   });
-
   input.addEventListener('input', () => {
     input.style.height = 'auto';
     input.style.height = input.scrollHeight + 'px';
   });
-
-  document.querySelectorAll('.suggestion').forEach(btn => {
+  suggestionsEl.querySelectorAll('.suggestion').forEach(btn => {
     btn.addEventListener('click', () => send(btn.textContent));
   });
 </script>
