@@ -44,11 +44,14 @@ app.post("/api/chat", async (req: Request, res: Response) => {
 
     // Stream events — send a sentinel when a tool call starts so the
     // frontend can reset the bubble and show only the final answer.
+    let stepCount = 0;
     for await (const part of result.fullStream) {
-      if (part.type === "text-delta") {
+      if (part.type === "step-start") {
+        // Every step after the first means a tool was called — reset the bubble
+        if (stepCount > 0) res.write("\x1E");
+        stepCount++;
+      } else if (part.type === "text-delta") {
         res.write(part.textDelta);
-      } else if (part.type === "tool-call") {
-        res.write("\x1E"); // ASCII record separator — signals "tool call starting"
       }
     }
 
