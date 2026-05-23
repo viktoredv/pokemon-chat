@@ -8,11 +8,15 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^1.2.12",
     "@anthropic-ai/sdk": "^0.39.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "ai": "^4.3.19",
     "express": "^4.21.2"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/json-schema": "^7.0.15",
     "@types/node": "^22.0.0",
     "typescript": "^5.5.0"
   }

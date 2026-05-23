@@ -1,5 +1,8 @@
-import express from "express";
-import Anthropic from "@anthropic-ai/sdk";
+import express, { Request, Response } from "express";
+import { streamText } from "ai";
+import { anthropic } from "@ai-sdk/anthropic";
+import { experimental_createMCPClient } from "ai";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -8,55 +11,39 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
-
 const MCP_SERVER_URL = "https://pokeapi-mcp-server-production.up.railway.app/mcp";
 
-app.post("/api/chat", async (req, res) => {
+app.post("/api/chat", async (req: Request, res: Response) => {
   const { messages } = req.body;
 
-  res.setHeader("Content-Type", "text/event-stream");
-  res.setHeader("Cache-Control", "no-cache");
-  res.setHeader("Connection", "keep-alive");
+  let mcpClient: Awaited<ReturnType<typeof experimental_createMCPClient>> | null = null;
 
   try {
-    const stream = anthropic.messages.stream({
-      model: "claude-sonnet-4-5",
-      max_tokens: 1024,
+    mcpClient = await experimental_createMCPClient({
+      transport: new StreamableHTTPClientTransport(new URL(MCP_SERVER_URL)),
+    });
+
+    const tools = await mcpClient.tools();
+
+    const result = streamText({
+      model: anthropic("claude-sonnet-4-5"),
       system:
         "You are PokéGuru, a friendly and enthusiastic Pokémon expert. " +
         "Use the available tools to answer questions about Pokémon accurately. " +
-        "Keep answers concise and fun. Use the occasional Pokémon-related emoji 🔴⚪.",
+        "Keep answers concise and fun. Use the occasional Pokémon-related emoji.",
       messages,
-      // @ts-expect-error — mcp_servers is a beta feature not yet in SDK types
-      mcp_servers: [
-        {
-          type: "url",
-          url: MCP_SERVER_URL,
-          name: "pokeapi",
-        },
-      ],
-    }, {
-      headers: {
-        "anthropic-beta": "mcp-client-2025-04-04",
+      tools,
+      maxSteps: 5,
+      onFinish: async () => {
+        await mcpClient?.close();
       },
     });
 
-    for await (const event of stream) {
-      if (
-        event.type === "content_block_delta" &&
-        event.delta.type === "text_delta"
-      ) {
-        res.write(`data: ${JSON.stringify({ text: event.delta.text })}\n\n`);
-      }
-    }
-
-    res.write("data: [DONE]\n\n");
-    res.end();
+    result.pipeTextStreamToResponse(res);
   } catch (err) {
-    console.error(err);
-    res.write(`data: ${JSON.stringify({ error: "Something went wrong." })}\n\n`);
-    res.end();
+    console.error("Error:", err);
+    await mcpClient?.close();
+    res.status(500).json({ error: "Something went wrong." });
   }
 });
 
