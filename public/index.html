@@ -296,7 +296,7 @@
     addMessage('user', text);
     history.push({ role: 'user', content: text });
 
-    const typingEl = addTyping();
+    let typingEl = addTyping();
 
     let reply = '';
     let bubble = null;
@@ -319,12 +319,12 @@
 
         for (const char of chunk) {
           if (char === '\x1E') {
-            // Tool call starting — reset and show a fresh "searching" bubble
+            // New step — start a fresh bubble
             reply = '';
-            if (bubble) bubble.innerHTML = '<em style="opacity:0.5">Searching…</em>';
+            bubble = null;
           } else {
             if (!bubble) {
-              typingEl.remove();
+              if (typingEl) { typingEl.remove(); typingEl = null; }
               bubble = addMessage('assistant');
             }
             reply += char;
