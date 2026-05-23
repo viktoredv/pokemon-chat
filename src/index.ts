@@ -39,7 +39,20 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       },
     });
 
-    result.pipeTextStreamToResponse(res);
+    res.setHeader("Content-Type", "text/plain; charset=utf-8");
+    res.setHeader("Transfer-Encoding", "chunked");
+
+    // Stream events — send a sentinel when a tool call starts so the
+    // frontend can reset the bubble and show only the final answer.
+    for await (const part of result.fullStream) {
+      if (part.type === "text-delta") {
+        res.write(part.textDelta);
+      } else if (part.type === "tool-call") {
+        res.write("\x1E"); // ASCII record separator — signals "tool call starting"
+      }
+    }
+
+    res.end();
   } catch (err) {
     console.error("Error:", err);
     await mcpClient?.close();

@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PokéGuru</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -113,9 +114,14 @@
       padding: 10px 14px;
       border-radius: 16px;
       font-size: 14px;
-      line-height: 1.55;
-      white-space: pre-wrap;
+      line-height: 1.6;
     }
+    .bubble p { margin-bottom: 8px; }
+    .bubble p:last-child { margin-bottom: 0; }
+    .bubble strong { font-weight: 600; }
+    .bubble ol, .bubble ul { padding-left: 18px; margin-bottom: 8px; }
+    .bubble li { margin-bottom: 4px; }
+    .bubble code { background: rgba(0,0,0,0.07); border-radius: 4px; padding: 1px 5px; font-size: 13px; }
     .message.assistant .bubble {
       background: #fff;
       color: #222;
@@ -309,15 +315,22 @@
         const { done, value } = await reader.read();
         if (done) break;
 
-        const text = decoder.decode(value, { stream: true });
-        if (text) {
-          if (!bubble) {
-            typingEl.remove();
-            bubble = addMessage('assistant');
+        const chunk = decoder.decode(value, { stream: true });
+
+        for (const char of chunk) {
+          if (char === '\x1E') {
+            // Tool call starting — reset and show a fresh "searching" bubble
+            reply = '';
+            if (bubble) bubble.innerHTML = '<em style="opacity:0.5">Searching…</em>';
+          } else {
+            if (!bubble) {
+              typingEl.remove();
+              bubble = addMessage('assistant');
+            }
+            reply += char;
+            bubble.innerHTML = marked.parse(reply);
+            chat.scrollTop = chat.scrollHeight;
           }
-          reply += text;
-          bubble.textContent = reply;
-          chat.scrollTop = chat.scrollHeight;
         }
       }
     } catch (e) {
